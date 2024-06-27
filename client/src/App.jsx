@@ -1,6 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import IndexPage from "./pages/IndexPage";
+
+import IndexPage from "./pages/indexPage";
 import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
@@ -14,13 +15,12 @@ function App() {
     <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<IndexPage />} />
+          <Route index element={<IndexPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/account" element={<AccountPage />} />
+          {/* <Route path="/account" element={<AccountPage />} /> */}
           <Route path="/account/:subpage?" element={<AccountPage />} />
-          {/* <Route path="/account/bookings" element={<AccountPage />} />
-          <Route path="/account/places" element={<AccountPage />} /> */}
+          <Route path="/account/:subpage/:action" element={<AccountPage />} />
         </Route>
       </Routes>
     </UserContextProvider>
