@@ -4,7 +4,7 @@ const {Schema} = mongoose
 const placeSchema = new Schema({
     owner: {type: mongoose.Schema.Types.ObjectId, ref:'User'},
     title: String,
-    adrress: String,
+    address: String,
     photos: [String],
     description: String,
     perks: [String],
@@ -12,7 +12,7 @@ const placeSchema = new Schema({
     checkIn: Number,
     checkOut: Number,
     maxGuests: Number,
-    price: Number
+    price: Number,
 });
 
 const PlaceModel = mongoose.model('Place', placeSchema);

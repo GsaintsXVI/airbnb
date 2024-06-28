@@ -3,9 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "./userContext";
 export default function Header() {
     // const {user} = useContext(UserContext);
-    const { ready, user } = useContext(UserContext);
-
-    console.log(ready, user);
+    const { user } = useContext(UserContext);
     return (
         <header className="p-4 flex justify-between">
             <Link to={"/"} className="flex items-center gap-2">

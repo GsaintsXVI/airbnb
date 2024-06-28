@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 export default function Perks({ selected, onChange }) {
     function handleCbClick(e) {
         const {name, checked} = e.target
@@ -13,7 +14,7 @@ export default function Perks({ selected, onChange }) {
     return (
         <>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="wifi" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('wifi')} name="wifi" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -32,7 +33,7 @@ export default function Perks({ selected, onChange }) {
                 <span>Wifi</span>
             </label>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="parking" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('parking')} name="parking" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -51,7 +52,7 @@ export default function Perks({ selected, onChange }) {
                 <span>Free Parking Spot</span>
             </label>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="tv" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('tv')} name="tv" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -70,7 +71,7 @@ export default function Perks({ selected, onChange }) {
                 <span>TV</span>
             </label>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="radio" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('radio')} name="radio" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -88,7 +89,7 @@ export default function Perks({ selected, onChange }) {
                 <span>Radio</span>
             </label>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="pets" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('pets')} name="pets" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -106,7 +107,7 @@ export default function Perks({ selected, onChange }) {
                 <span>Pets</span>
             </label>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                <input type="checkbox" name="entrance" onChange={handleCbClick}/>
+                <input type="checkbox" checked={selected.includes('entrance')} name="entrance" onChange={handleCbClick}/>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
