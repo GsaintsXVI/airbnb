@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {differenceInCalendarDays} from 'date-fns';
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { UserContext } from "./userContext";
 
 /* eslint-disable react/prop-types */
 export function BookingWidget({ place }) {
@@ -8,10 +11,36 @@ export function BookingWidget({ place }) {
     const [numberOfGuests, setNumberOfGuests] = useState(1);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [mobile, setMobile] = useState('');
+    const [phone, setPhone] = useState('');
+    const [redirect,setRedirect] = useState('');
+    const { user } = useContext(UserContext);
+    useEffect(() => {
+        if (user) {
+            setFullName(user.name);
+            setEmail(user.email);
+        }
+    })
+
+    async function bookThisPlace(){
+        const response =  await axios.post('/bookings', {
+            place: place._id,
+            checkIn,
+            checkOut, 
+            numberOfGuests, 
+            name:fullName, 
+            email, 
+            phone,
+            price: numberOfNights * place.price
+        })   
+        const bookingID = response.data._id
+        setRedirect(`/account/bookings/${bookingID}`);
+    }
     let numberOfNights = 0;
     if(checkIn && checkOut){
         numberOfNights = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
+    }
+    if(redirect){  
+        return <Navigate to={redirect} />
     }
     return (
         <div className="bg-white shadow p-4 rounded-2xl">
@@ -45,8 +74,8 @@ export function BookingWidget({ place }) {
                         <input type="Email" placeholder="JohnSmith@email.com" value={email} onChange={e => setEmail(e.target.value)} />
                     </div>
                     <div className="py-3 px-4">
-                        <label>Mobile: </label>
-                        <input type="tel" placeholder="0123456789" value={mobile} onChange={e => setMobile(e.target.value)} />
+                        <label>phone: </label>
+                        <input type="tel" placeholder="0123456789" value={phone} onChange={e => setPhone(e.target.value)} />
                     </div>
                     <div className="border-b py-2 text-end">
                         ${numberOfNights * place.price} total
@@ -54,7 +83,7 @@ export function BookingWidget({ place }) {
                 </div>
                 
             )}
-            <button className="primary mt-4">
+            <button onClick={bookThisPlace}className="primary mt-4">
                 Book this place 
                 {numberOfNights && (
                     <span className="ml-1">${numberOfNights * place.price}</span>

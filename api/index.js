@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('./models/User')
 const Place = require('./models/Place')
+const Booking = require('./models/Booking')
 const cookieParser = require('cookie-parser')
 const imageDownloader = require('image-downloader')
 const multer = require('multer')
@@ -26,6 +27,17 @@ app.use(cors({
 console.log(process.env.MONGO_URL)
 mongoose.connect(process.env.MONGO_URL)
 
+
+
+function getUserDataFromReq(req) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err
+            resolve(userData)
+        })
+
+    })
+}
 app.get('/test', (req, res) => {
     res.send('Hello World!')
 })
@@ -88,7 +100,7 @@ app.post('/logout', (req, res) => {
 console.log({ __dirname })
 app.post('/upload-by-link', async (req, res) => {
     const { link } = req.body
-    if(!link) return res.status(400).json('No link')
+    if (!link) return res.status(400).json('No link')
     const newName = 'photo' + Date.now() + '.jpg';
     await imageDownloader.image({
         url: link,
@@ -132,7 +144,7 @@ app.post('/places', (req, res) => {
 
 })
 app.get('/places', async (req, res) => {
-    res.json( await Place.find() )
+    res.json(await Place.find())
 })
 app.get('/user-places', (req, res) => {
     const { token } = req.cookies
@@ -154,19 +166,36 @@ app.get('/places/:id', async (req, res) => {
 })
 app.put('/places', async (req, res) => {
     const { token } = req.cookies
-    const { id, title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests,price } = req.body
+    const { id, title, address, addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests, price } = req.body
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
         if (err) throw err
         const placeDoc = await Place.findById(id);
         if (userData.id === placeDoc.owner.toString()) {
             placeDoc.set({
-                title, address, photos: addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests,price
+                title, address, photos: addedPhotos, description, perks, extraInfo, checkIn, checkOut, maxGuests, price
             })
             await placeDoc.save();
             res.json('ok');
         }
     })
 
+})
+
+app.post('/bookings', async (req, res) => {
+    const userData = await getUserDataFromReq(req)
+    const { place,checkIn, checkOut, numberOfGuests, name, phone, email, price } = req.body
+    Booking.create({
+        place, checkIn, checkOut, numberOfGuests, name, phone, email, price, user: userData.id
+    }).then((doc) => {
+        res.json(doc)
+    }).catch((err) => {
+        throw err
+    })
+})
+
+app.get('/bookings', async (req, res) => {
+    const userData = await getUserDataFromReq(req)
+    res.json(await Booking.find({ user: userData.id }).populate('place'))
 })
 
 app.listen(port)
